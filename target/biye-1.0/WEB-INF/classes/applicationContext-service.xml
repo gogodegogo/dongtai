@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+
+
+<!--配置业务逻辑层，给spring扫描识别该包下的所有类，使用注解方式-->
+	<context:component-scan base-package="com.mimi.service"></context:component-scan>
+<!--		设置事务管理器-->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+<!--	添加事物的切面-->
+	<tx:advice id="myadvice" transaction-manager="transactionManager">
+		<!--规定包含name的查询（修改）方法的事务属性控制-->
+		<tx:attributes>
+			<tx:method name="select*" read-only="true"/>
+			<tx:method name="insert*" propagation="REQUIRED"/>
+			<tx:method name="delete*" propagation="REQUIRED"/>
+			<tx:method name="update*" propagation="REQUIRED"/>
+			<tx:method name="*" propagation="SUPPORTS"/>
+		</tx:attributes>
+	</tx:advice>
+<!--	完成切面和切入点的切入-->
+	<aop:config>
+														   <!--第一个*：任意的返回值-->
+														   <!--com.mimi.service：指定包下-->
+														   <!--第二个*：所有的类-->
+														   <!--第三个*：类中的所有方法-->
+														   <!--(..)：方法任意参数-->
+		<aop:pointcut id="mypointcut" expression="execution(* com.mimi.service.*.*(..))"/>
+		<aop:advisor advice-ref="myadvice" pointcut-ref="mypointcut"></aop:advisor>
+	</aop:config>
+</beans>

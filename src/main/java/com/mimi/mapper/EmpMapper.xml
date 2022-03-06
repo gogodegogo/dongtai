@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mimi.mapper.EmpMapper">
+    <resultMap id="BaseResultMap" type="com.mimi.pojo.Emp">
+        <id column="EMPNO" property="empno" jdbcType="INTEGER"/>
+        <result column="ENAME" property="ename" jdbcType="VARCHAR"/>
+        <result column="JOB" property="job" jdbcType="VARCHAR"/>
+        <result column="HIREDATE" property="hiredate" jdbcType="DATE"/>
+        <result column="SAL" property="sal" jdbcType="DOUBLE"/>
+        <result column="TYPE" property="type" jdbcType="INTEGER"/>
+        <result column="IMAGE" property="image" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+    EMPNO, ENAME, JOB, HIREDATE, SAL, TYPE, IMAGE
+  </sql>
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mimi.pojo.EmpExample">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        <include refid="Base_Column_List"/>
+        from emp
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from emp
+        where EMPNO = #{empno,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from emp
+    where EMPNO = #{empno,jdbcType=INTEGER}
+  </delete>
+    <delete id="deleteByExample" parameterType="com.mimi.pojo.EmpExample">
+        delete from emp
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
+    <insert id="insert" parameterType="com.mimi.pojo.Emp">
+    insert into emp (EMPNO, ENAME, JOB, 
+      HIREDATE, SAL, TYPE, IMAGE
+      )
+    values (#{empno,jdbcType=INTEGER}, #{ename,jdbcType=VARCHAR}, #{job,jdbcType=VARCHAR}, 
+      #{hiredate,jdbcType=DATE}, #{sal,jdbcType=DOUBLE}, #{type,jdbcType=INTEGER}, #{image,jdbcType=VARCHAR}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.mimi.pojo.Emp">
+        insert into emp
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="empno != null">
+                EMPNO,
+            </if>
+            <if test="ename != null">
+                ENAME,
+            </if>
+            <if test="job != null">
+                JOB,
+            </if>
+            <if test="hiredate != null">
+                HIREDATE,
+            </if>
+            <if test="sal != null">
+                SAL,
+            </if>
+            <if test="type != null">
+                TYPE,
+            </if>
+            <if test="image != null">
+                IMAGE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="empno != null">
+                #{empno,jdbcType=INTEGER},
+            </if>
+            <if test="ename != null">
+                #{ename,jdbcType=VARCHAR},
+            </if>
+            <if test="job != null">
+                #{job,jdbcType=VARCHAR},
+            </if>
+            <if test="hiredate != null">
+                #{hiredate,jdbcType=DATE},
+            </if>
+            <if test="sal != null">
+                #{sal,jdbcType=DOUBLE},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="image != null">
+                #{image,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <select id="countByExample" parameterType="com.mimi.pojo.EmpExample" resultType="java.lang.Integer">
+        select count(*) from emp
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
+        update emp
+        <set>
+            <if test="record.empno != null">
+                EMPNO = #{record.empno,jdbcType=INTEGER},
+            </if>
+            <if test="record.ename != null">
+                ENAME = #{record.ename,jdbcType=VARCHAR},
+            </if>
+            <if test="record.job != null">
+                JOB = #{record.job,jdbcType=VARCHAR},
+            </if>
+            <if test="record.hiredate != null">
+                HIREDATE = #{record.hiredate,jdbcType=DATE},
+            </if>
+            <if test="record.sal != null">
+                SAL = #{record.sal,jdbcType=DOUBLE},
+            </if>
+            <if test="record.type != null">
+                TYPE = #{record.type,jdbcType=INTEGER},
+            </if>
+            <if test="record.image != null">
+                IMAGE = #{record.image,jdbcType=VARCHAR},
+            </if>
+        </set>
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByExample" parameterType="map">
+        update emp
+        set EMPNO = #{record.empno,jdbcType=INTEGER},
+        ENAME = #{record.ename,jdbcType=VARCHAR},
+        JOB = #{record.job,jdbcType=VARCHAR},
+        HIREDATE = #{record.hiredate,jdbcType=DATE},
+        SAL = #{record.sal,jdbcType=DOUBLE},
+        TYPE = #{record.type,jdbcType=INTEGER},
+        IMAGE = #{record.image,jdbcType=VARCHAR}
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByPrimaryKeySelective" parameterType="com.mimi.pojo.Emp">
+        update emp
+        <set>
+            <if test="ename != null">
+                ENAME = #{ename,jdbcType=VARCHAR},
+            </if>
+            <if test="job != null">
+                JOB = #{job,jdbcType=VARCHAR},
+            </if>
+            <if test="hiredate != null">
+                HIREDATE = #{hiredate,jdbcType=DATE},
+            </if>
+            <if test="sal != null">
+                SAL = #{sal,jdbcType=DOUBLE},
+            </if>
+            <if test="type != null">
+                TYPE = #{type,jdbcType=INTEGER},
+            </if>
+            <if test="image != null">
+                IMAGE = #{image,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where EMPNO = #{empno,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.mimi.pojo.Emp">
+    update emp
+    set ENAME = #{ename,jdbcType=VARCHAR},
+      JOB = #{job,jdbcType=VARCHAR},
+      HIREDATE = #{hiredate,jdbcType=DATE},
+      SAL = #{sal,jdbcType=DOUBLE},
+      TYPE = #{type,jdbcType=INTEGER},
+      IMAGE = #{image,jdbcType=VARCHAR}
+    where EMPNO = #{empno,jdbcType=INTEGER}
+  </update>
+
+    <delete id="deletebatch">
+        delete from emp where empno in
+        <foreach collection="array" item="empno" separator="," open="(" close=")">
+            #{empno}
+        </foreach>
+    </delete>
+
+    <select id="tiaojianchaxun" parameterType="com.mimi.pojo.vo.EmpVo" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from emp
+        <where>
+            <if test="ename != null and ename != ''">
+                and ename like concat('%',#{ename},'%')
+            </if>
+            <if test="typeid != null and typeid != -1">
+                and type = ${typeid}
+            </if>
+            <if test="minmoney != null and maxmoney != null">
+                and sal between #{minmoney} and #{maxmoney}
+            </if>
+            <if test="minmoney == null">
+                and sal &lt;= #{maxmoney}
+            </if>
+            <if test="maxmoney == null">
+                and sal &gt;= #{minmoney}
+            </if>
+        </where>
+        order by empno desc
+    </select>
+</mapper>
